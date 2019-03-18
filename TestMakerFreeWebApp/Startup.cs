@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TestMakerFreeWebApp.Data;
 
 namespace TestMakerFreeWebApp
 {
@@ -26,6 +28,11 @@ namespace TestMakerFreeWebApp
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+            // Add EntityFramework support for Sqlserver.
+            services.AddEntityFrameworkSqlServer();
+
+            // Add ApplicationDbContext.
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,6 +80,16 @@ namespace TestMakerFreeWebApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            // Create a service scope to get an ApplicationDbContext instance by DI
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+                // Create the db if it doesn't exist and applied any pending migration
+                dbContext.Database.Migrate();
+                // seed the db
+                DbSeeder.Seed(dbContext);
+            }
         }
     }
 }
