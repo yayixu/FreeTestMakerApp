@@ -53,4 +53,8 @@ export class QuizEditComponent {
       }, error => console.log(error));
     }
   }
+
+  onBack() {
+    this.router.navigate(["home"]);
+  }
 }
