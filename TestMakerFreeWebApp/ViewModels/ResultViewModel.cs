@@ -17,15 +17,15 @@ namespace TestMakerFreeWebApp.ViewModels
         #region properties
 
         public int Id { get; set; }
-        public int QuizeId { get; set; }
+        public int QuizId { get; set; }
         public string Text { get; set; }
         public string Notes { get; set; }
         [DefaultValue(0)]
         public int Type { get; set; }
         [DefaultValue(0)]
         public int Flags { get; set; }
-        [DefaultValue(0)]
-        public int Value { get; set; }
+        public int? MinValue { get; set; }
+        public int? MaxValue { get; set; }
         [JsonIgnore]
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
