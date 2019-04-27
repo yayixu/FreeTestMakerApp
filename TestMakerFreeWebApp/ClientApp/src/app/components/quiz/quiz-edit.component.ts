@@ -47,10 +47,10 @@ export class QuizEditComponent {
     }
     else {
       this.http.put<Quiz>(url, quiz).subscribe(res => {
-        var q = res;
+        var q = res; 
         console.log("Quiz " + q.Id + "  has been created.");
         this.router.navigate(["home"]);
-      }, error => console.log(error));
+      }, error => console.log(error));  
     }
   }
 
